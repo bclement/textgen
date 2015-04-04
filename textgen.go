@@ -2,6 +2,7 @@ package textgen
 
 import (
     "bufio"
+    "bytes"
     "io"
     "math/rand"
     "strings"
@@ -130,10 +131,16 @@ func (g *Generator) Generate(w *bufio.Writer, maxlen uint) error {
         _, err = w.WriteString(nextword + " ")
         prefix.PushBack(nextword)
     }
-    /* TODO try to end with a period? */
     if err == nil {
         err = w.Flush()
     }
     return err
+}
+
+func (g *Generator) GenerateString(maxlen uint) (string, error) {
+    var buf bytes.Buffer
+    w := bufio.NewWriter(&buf)
+    err := g.Generate(w, maxlen)
+    return buf.String(), err
 }
 
